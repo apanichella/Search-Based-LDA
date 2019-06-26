@@ -12,11 +12,11 @@ library(NMOF)
 library(xtable)
 
 #set the path to your project directory
-setwd("~/Desktop/LDA-GA-NEW")
+setwd("<path to the main folder>")
 
 ## 1. load utility functions 
-source("/Users/apanichella/Desktop/LDA-GA-NEW/utilities.R")
-source("/Users/apanichella/Desktop/LDA-GA-NEW/metaheuristics.R")
+source("<path to the main folder>/utilities.R")
+source("<path to the main folder>/metaheuristics.R")
 
 ## 2. Set path to the dataset
 system <- "datasets/LANG"
