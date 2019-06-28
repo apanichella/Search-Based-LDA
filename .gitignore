@@ -1,0 +1,8 @@
+results.csv
+
+# R
+*.Rproj
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
