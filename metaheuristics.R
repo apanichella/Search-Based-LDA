@@ -6,7 +6,7 @@ library(metaheuristicOpt)
 library(randomsearch)
 
 ## 1. Fitness functions
-source("/Users/apanichella/Desktop/LDA-GA-NEW/fitness_functions.R")
+source(paste(main_path, "/fitness_functions.R", sep=""))
 
 run_metaheurisic<-function(name, lower_bounds=c(), upper_bounds=c(), n_iterations, pop_size){
   if (name == "GA"){

@@ -11,12 +11,13 @@ library(stopwords)
 library(NMOF)
 library(xtable)
 
+main_path <<- "<TODO: insert path to git repository / this project here>"
 #set the path to your project directory
-setwd("<path to the main folder>")
+setwd(main_path)
 
 ## 1. load utility functions 
-source("<path to the main folder>/utilities.R")
-source("<path to the main folder>/metaheuristics.R")
+source(paste(main_path, "/utilities.R", sep=""))
+source(paste(main_path, "/metaheuristics.R", sep=""))
 
 ## 2. Set path to the dataset
 system <- "datasets/LANG"
