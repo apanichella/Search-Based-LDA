@@ -8,23 +8,29 @@ library(randomsearch)
 ## 1. Fitness functions
 source(paste(main_path, "/fitness_functions.R", sep=""))
 
+# Factory that run each meta-heuristic with the proper setting
 run_metaheurisic<-function(name, lower_bounds=c(), upper_bounds=c(), n_iterations, pop_size){
   if (name == "GA"){
+    print("Running Genetic Algorithms")
     res<-ga(type = "real-valued", fitness = fitness_LDA, lower=lower_bounds, upper=upper_bounds, pmutation=1/4, maxiter=nGen, run=n_iterations, popSize=pop_size, mutation=gareal_raMutation, crossover = gareal_blxCrossover)
     best <- summary(res)
     return(best$solution)
   } else if (name == "DE") {
+    print("Running Differential Evolution")
     res <- DEoptim(fn = min_fitness_LDA, lower=lower_bounds, upper=upper_bounds, control = DEoptim.control(itermax = n_iterations, NP=pop_size))
     return(res$optim$bestmem)
   } else if (name == "RANDOM") {
+    print("Running Random Search")
     res <- randomsearch(fun = min_fitness_LDA, minimize=T, max.evals=pop_size*n_iterations, lower=lower_bounds, upper=upper_bounds)
     summary = summary(res)
     return(summary$best.x$x)
   } else if (name == "SA"){
+    print("Running Simulated Annealing")
     initial.point <- c(max(10,runif(1)*upper_bounds[1]),runif(1)*upper_bounds[2],runif(1)*upper_bounds[3],runif(1)*upper_bounds[4])
     res <- SAopt(OF=min_fitness_LDA, algo=list(nS=pop_size, nT=n_iterations, nD=pop_size*n_iterations, neighbour=neighbour_fun, x0=initial.point))
     return(res$xbest)
   } else if (name == "PSO"){
+    print("Running Particle Swarm Optimization")
     res <- PSopt(OF=min_fitness_LDA, algo=list(nP=pop_size, nG=n_iterations, min=lower_bounds, max=upper_bounds))
     x = res$xbest
     if (x[3]<0)
@@ -35,6 +41,8 @@ run_metaheurisic<-function(name, lower_bounds=c(), upper_bounds=c(), n_iteration
   }
 }
 
+# Function used by Simulated Annealing (SA) to generate neighbors. The package 'GenSA' does not have
+# a native faction to mutate/perturbate a solution. 
 neighbour_fun <- function(x){
   r <- runif(1)
   x2 <- x
