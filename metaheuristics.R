@@ -12,7 +12,7 @@ source(paste(main_path, "/fitness_functions.R", sep=""))
 run_metaheurisic<-function(name, lower_bounds=c(), upper_bounds=c(), n_iterations, pop_size){
   if (name == "GA"){
     print("Running Genetic Algorithms")
-    res<-ga(type = "real-valued", fitness = fitness_LDA, lower=lower_bounds, upper=upper_bounds, pmutation=1/4, maxiter=nGen, run=n_iterations, popSize=pop_size, mutation=gareal_raMutation, crossover = gareal_blxCrossover)
+    res<-ga(type = "real-valued", fitness = fitness_LDA, lower=lower_bounds, upper=upper_bounds, pmutation=1/4, maxiter=n_iterations, run=n_iterations, popSize=pop_size, mutation=gareal_raMutation, crossover = gareal_blxCrossover)
     best <- summary(res)
     return(best$solution)
   } else if (name == "DE") {
