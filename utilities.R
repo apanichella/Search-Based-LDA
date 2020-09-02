@@ -1,6 +1,9 @@
+if (!require(corpus)){ install.packages("corpus")  }
+
 library(igraph)
 library(stringr)
 library(jsonlite)
+library(corpus)
 
 split_document <- function(files, output_path){
   for (file in files){
@@ -21,34 +24,13 @@ split_document <- function(files, output_path){
   }
 }
 
-pre_processing <- function(output_path){
-  corpus <- SimpleCorpus(DirSource(output_path, encoding = "UTF-8"), control = list(language = "en"))
-  corpus <- tm_map(corpus, stripWhitespace) # remove white spaces
-  corpus <- tm_map(corpus, removeNumbers)   # remove numbers
-  corpus <- tm_map(corpus, removePunctuation) # remove punctuation
-  corpus <- tm_map(corpus, content_transformer(tolower)) # transform everything to lower case
-  # Apply stopword lists
-  corpus <- tm_map(corpus, removeWords, stopwords("en")) 
-  corpus <- tm_map(corpus, removeWords, stopwords(language = "en", source = "smart"))
-  corpus <- tm_map(corpus, removeWords, stopwords(language = "en", source = "snowball"))
-  corpus <- tm_map(corpus, removeWords, stopwords(language = "en", source = "stopwords-iso"))
-  corpus <- tm_map(corpus, removeWords, c("abstract", "assert","boolean","break","byte", "case","catch","char","continue","default","do","double","else","enum","extends","final","finally","float","for","if","implements","import","instanceof","int","interface","long","native","new","package","private","protected","public","return","short","static","strictfp","super","syncronized","this","throw","throws","transient","try","void","volatile","while","goto","const","java", "class", "import","github", "http", "html", "for", "while", "then", "private", "public", "protected", "try", "catch","instead","https","http","href","ibm","throw","throws","clone","javadoc","bug", "string","method","list","array","object"))
-  # Applying stemming
-  corpus <- tm_map(corpus, stemDocument, language = "english")
-  
-  # 7. Build the document-by-term matrix
-  tdm <- DocumentTermMatrix(corpus, control = list(stemming = TRUE, wordLengths = c(2,Inf), bounds = list(global=c(2,Inf))))
-  
-  return(tdm)
-}
-
-save_results <- function(system, approach, file_output, x, top5, top10, top15, top20, time){
-  result_frame <- data.frame(system, approach, x[1], x[2], x[3], x[4], top5, top10, top15, top20, time)
-  colnames(result_frame) <- c("System","Approach","x1","x2","x3","x4","TOP-5","TOP-10","TOP-15","TOP-20","Time")
+save_results <- function(system, lib, algorithm, fitness, file_output, x, top5, top10, top15, top20, time){
+  result_frame <- data.frame(system, lib,  algorithm, fitness, x[1], x[2], x[3], x[4], top5, top10, top15, top20, time)
+  colnames(result_frame) <- c("System","Library","Algorithm","FitnessFunction","x1","x2","x3","x4","TOP-5","TOP-10","TOP-15","TOP-20","Time")
   if (file.exists(file_output))
-    write.table(result_frame, file_output, sep = ",", col.names = F, append = T)
+    write.table(result_frame, file_output, sep = ",", col.names = F, row.names = F, append = T)
   else
-    write.table(result_frame, file_output, sep = ",", col.names = T, append = T)
+    write.table(result_frame, file_output, sep = ",", col.names = T, row.names = F, append = T)
 }
 
 oracle2graph <- function(path) {
@@ -91,19 +73,63 @@ topk <- function(graph, distances, k){
   return(numerator/counter)
 }
 
-evaluate_LDA <- function(x){
-  numero_topic<-round(x[1]) #x[1] = number of topics k
-  iteration<-round(x[2])    #x[2] =  number of gibbs iteration
-  pAlpha<-x[3]              #x[3] = Alpha
-  pDelta<-x[4]              #x[4] = Beta
-  
-  ldm <- LDA(tdm, method="Gibbs", control = list(alpha=pAlpha, delta=pDelta, iter=iteration, seed=5, nstart=1), k = numero_topic)  # k = num of topics
-  pldm <- posterior(ldm)
-  document2topic <- pldm$topics
-  
-  distances <- as.matrix(dist(document2topic, method = "euclidean", diag = T, upper = T))
-  rownames(distances) = rownames(document2topic)
-  colnames(distances) = rownames(document2topic)
-  return(distances)
+detach_package <- function(pkg, character.only = FALSE)
+{
+  if(!character.only)
+  {
+    pkg <- deparse(substitute(pkg))
+  }
+  search_item <- paste("package", pkg, sep = ":")
+  while(search_item %in% search())
+  {
+    detach(search_item, unload = TRUE, character.only = TRUE)
+  }
 }
 
+silhouette_coefficient <- function(matrix, distances){
+  # computing number of clusters
+  clustering<-matrix("",length(rownames(matrix)),1)
+  for (i in 1:length(rownames(matrix))) {
+    flag<-(matrix[i,]==max(matrix[i,]))# each documents belongs to the cluster with the higher probability
+    flag<-which(flag==TRUE)
+    topics <- sort(flag)
+    clustering[i,1]<-paste(topics, collapse = '_')
+  }
+  rownames(clustering)<-rownames(matrix)
+  
+  # assign the clusters
+  clusters<-unique(clustering)
+  count <- 1
+  for (clust in clusters){
+    clustering[clustering[,1] == clust,1] <- count
+    count <- count+1
+  }
+  cluster_objects<-list(); 
+  cluster_objects$clustering <- as.numeric(clustering)
+  
+  sil = silhouette(x=cluster_objects$clustering, dmatrix=distances)
+  sil = summary(sil)
+  
+  # # compute the cohesion for each documents
+  # cohesion <- matrix(nrow = length(rownames(distances)), ncol = 1)
+  # for (i in 1:length(rownames(distances))){
+  #   cohesion[i,1] <- max(distances[clustering[,1] == clustering[i,1],i])
+  # }
+  # 
+  # # compute the separation from other clusters 
+  # separation <- matrix(nrow = length(rownames(distances)), ncol = 1)
+  # for (i in 1:length(rownames(distances))){
+  #   separation[i,1] <- min(distances[clustering[,1] != clustering[i,1],i])
+  # }
+  # 
+  # # compute the silhouette coefficient
+  # sil <- matrix(nrow = length(rownames(distances)), ncol = 1)
+  # for (i in 1:length(rownames(distances))){
+  #   if (sum(clustering[i,1] == clustering)>1)
+  #     sil[i,1] <- (separation[i,1] - cohesion[i,1]) / max(separation[i,1], cohesion[i,1])
+  #   else
+  #     sil[i,1] <- 0 # if the cluster contanis only one document, the Silohuette Coeff. is zero
+  # }
+  # return(mean(sil))
+  return(sil$avg.width)
+}
