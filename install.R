@@ -13,7 +13,6 @@ if (!require(stopwords)){ install.packages("stopwords") }
 if (!require(NMOF)){ install.packages("NMOF") }
 if (!require(xtable)){ install.packages("xtable") }
 if (!require(Matrix)){ install.packages("Matrix") }
-if (!require(devtools)){ install.packages("devtools") }
 if (!require(SpeedReader)){ devtools::install_github("matthewjdenny/SpeedReader") }
 if (!require(GA)){ install.packages("GA")  }
 if (!require(slam)){ install.packages("slam")  }
