@@ -27,4 +27,6 @@ if (!require(pracma)){ install.packages("pracma")  }
 if (!require(philentropy)){ install.packages("philentropy")  }
 if (!require(topicmodels)){ install.packages('topicmodels', type='topicmodels')  }
 if (!require(textmineR)){ install.packages('textmineR', type='textmineR')  }
-devtools::install_github("matthewjdenny/SpeedReader")
+#install.packages(c('devtools','curl'))
+#library("devtools")
+#devtools::install_github("matthewjdenny/SpeedReader")
