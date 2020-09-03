@@ -1,9 +1,10 @@
 # let's install all required R packages
 
 if (!require(devtools)){ install.packages(c('devtools','curl'), dependencies=T)  }
-library("devtools")
-if (!require(XML)){ install.packages("XML", repos = "http://www.omegahat.net/R") }
-if (!require(SpeedReader)){ devtools::install_github("matthewjdenny/SpeedReader")}
+library(devtools)
+#if (!require(XML)){ install.packages("XML", repos = "http://www.omegahat.net/R") }
+#library(XML)
+if (!require(SpeedReader)){ devtools::install_github("matthewjdenny/SpeedReader", dependencies=T) }
 if (!require(tm)){ install.packages("tm") }
 if (!require(jsonlite)){ install.packages("jsonlite")}
 if (!require(slam)){ install.packages("slam") }
@@ -27,6 +28,6 @@ if (!require(randomsearch)){ install.packages("randomsearch")  }
 if (!require(parma)){ install.packages("parma")  }
 if (!require(pracma)){ install.packages("pracma")  }
 if (!require(philentropy)){ install.packages("philentropy")  }
-if (!require(topicmodels)){ install.packages('topicmodels', type='topicmodels')  }
+if (!require(topicmodels)){ install.packages('topicmodels', dependencies=T)  }
 if (!require(textmineR)){ install.packages('textmineR', type='textmineR')  }
 
