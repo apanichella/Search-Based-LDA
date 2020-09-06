@@ -20,10 +20,10 @@ To facilitate installing and running the script, please use the **Docker File** 
 `docker run -it -v <local-folder>:/home/SSBSE-LDA/Results sbse-lda:latest bash`.
 In the command above, replace `<local-folder>` with the folder in your local machine to save the results. The option `-v` maps a host directory to a directory in docker container.
 
-4. Once steps 1-2 are completed, you can run the `R` script inside the container using the commands:
-4.1 Start `R` with the command: `R`
-4.2 Run the main script inside `R`using the command: `source('MainScript.R')`
-4.3 Follow the instructions on the computer screen
+4. Once steps 1-2 are completed, you can run the `R` script inside the container using the commands:<br/>
+4.1 Start `R` with the command: `R`<br/>
+4.2 Run the main script inside `R`using the command: `source('MainScript.R')`<br/>
+4.3 Follow the instructions on the computer screen <br/>
  
 Notice that building the docker image will require some time (around 20+ minutes).
 
