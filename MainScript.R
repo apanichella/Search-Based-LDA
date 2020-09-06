@@ -35,7 +35,7 @@ duplicate_graph <- oracle2graph(duplicate_graph)
 #plot(duplicate_graph)
 
 ## 4. Set the path to the output directory
-file_output <- "results.csv"
+file_output <- "Results/results.csv"
 files <- list.files(input_path)
 
 ## 5. split the main file (cataining all reports) in separate files (one for each report)

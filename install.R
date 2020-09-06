@@ -1,33 +1,30 @@
 # let's install all required R packages
 
-if (!require(devtools)){ install.packages(c('devtools','curl'), dependencies=T)  }
+install.packages(c('devtools','curl'), dependencies=T)
 library(devtools)
-#if (!require(XML)){ install.packages("XML", repos = "http://www.omegahat.net/R") }
-#library(XML)
-if (!require(SpeedReader)){ devtools::install_github("matthewjdenny/SpeedReader", dependencies=T) }
-if (!require(tm)){ install.packages("tm") }
-if (!require(jsonlite)){ install.packages("jsonlite")}
-if (!require(slam)){ install.packages("slam") }
-if (!require(igraph)){ install.packages("igraph") }
-if (!require(stringr)){ install.packages("stringr") }
-if (!require(cluster)){ install.packages("cluster") }
-if (!require(cmaes)){ install.packages("cmaes") }
-if (!require(snakecase)){ install.packages("snakecase") }
-if (!require(stopwords)){ install.packages("stopwords") }
-if (!require(NMOF)){ install.packages("NMOF") }
-if (!require(xtable)){ install.packages("xtable") }
-if (!require(Matrix)){ install.packages("Matrix") }
-if (!require(SpeedReader)){ devtools::install_github("matthewjdenny/SpeedReader") }
-if (!require(GA)){ install.packages("GA")  }
-if (!require(slam)){ install.packages("slam")  }
-if (!require(DEoptim)){ install.packages("DEoptim")  }
-if (!require(GenSA)){ install.packages("GenSA")  }
-if (!require(metaheuristicOpt)){ install.packages("metaheuristicOpt")  }
-if (!require(randomsearch)){ install.packages("randomsearch")  }
-if (!require(randomsearch)){ install.packages("randomsearch")  }
-if (!require(parma)){ install.packages("parma")  }
-if (!require(pracma)){ install.packages("pracma")  }
-if (!require(philentropy)){ install.packages("philentropy")  }
-if (!require(topicmodels)){ install.packages('topicmodels', dependencies=T)  }
-if (!require(textmineR)){ install.packages('textmineR', type='textmineR')  }
+devtools::install_github("matthewjdenny/SpeedReader", dependencies=T) 
+install.packages("tm") 
+install.packages("jsonlite")
+install.packages("slam") 
+install.packages("igraph") 
+install.packages("stringr") 
+install.packages("cluster") 
+install.packages("cmaes") 
+install.packages("snakecase") 
+install.packages("stopwords") 
+install.packages("NMOF")
+install.packages("xtable") 
+install.packages("Matrix") 
+install.packages("GA")  
+install.packages("slam")  
+install.packages("DEoptim")  
+install.packages("GenSA")  
+install.packages("metaheuristicOpt")  
+install.packages("randomsearch")  
+install.packages("parma")  
+install.packages("pracma")  
+install.packages("philentropy")  
+install.packages('topicmodels', dependencies=T)  
+install.packages('textmineR')
+install.packages('corpus', dependencies = T)
 
